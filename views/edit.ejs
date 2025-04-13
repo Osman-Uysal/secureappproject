@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Post</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <h1>Edit Post</h1>
+    <a href="/">Back to Review Site</a>
+    
+    <form action="/posts/<%= post.id %>" method="POST">
+        <input type="text" name="title" value="<%= post.title %>" required>
+        <textarea name="content" required><%= post.content %></textarea>
+        <button type="submit">Update Post</button>
+    </form>
+    
+    <form action="/posts/<%= post.id %>/delete" method="POST">
+        <button type="submit" class="delete">Delete Post</button>
+    </form>
+</body>
+</html>
