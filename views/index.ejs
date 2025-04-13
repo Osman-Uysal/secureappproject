@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Secure Movie Review</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <h1>Secure Movie Review</h1>
+    
+    <% if (user) { %>
+        <p>Welcome, <%= user.username %> | 
+        <a href="/users">All Users</a> | 
+        <a href="#" onclick="document.getElementById('logout-form').submit()">Logout</a></p>
+        <form id="logout-form" action="/logout" method="POST" style="display:none;">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        </form>
+        
+        <form action="/posts" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <input type="text" name="title" placeholder="Title" required>
+            <textarea name="content" placeholder="Content"></textarea>
+            <button type="submit">Create Post</button>
+        </form>
+    <% } else { %>
+        <a href="/login">Login</a> | <a href="/register">Register</a>
+    <% } %>
+    
+    <form action="/" method="GET">
+        <input type="text" name="search" value="<%= search %>" placeholder="Search posts">
+        <button type="submit">Search</button>
+    </form>
+    
+    <div class="posts">
+        <% posts.forEach(post => { %>
+            <div class="post">
+                <h2><%= post.title %></h2>
+                <p><%= post.content %></p>
+                <small>By <%= post.username %> on <%= post.created_at %></small>
+                
+                <% if (user && (user.id === post.user_id || user.is_admin)) { %>
+                    <div class="post-actions">
+                        <a href="/posts/<%= post.id %>/edit" class="edit-btn">Edit</a>
+                        <form action="/posts/<%= post.id %>/delete" method="POST">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button type="submit" class="delete-btn">Delete</button>
+                        </form>
+                    </div>
+                <% } %>
+            </div>
+        <% }); %>
+    </div>
+</body>
+</html>
